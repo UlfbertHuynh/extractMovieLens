@@ -3,6 +3,7 @@ package extractor;
 import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.IndexOptions;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -107,6 +108,11 @@ public class CSVExtractor {
                 }
             }
             ratings.insertMany(ratingList);
+            IndexOptions options = new IndexOptions();
+            options.name("pairIDtime");
+            Document indexConfig = new Document("userID", 1).append("itemID", 1).append("date", -1);
+            ratings.createIndex(indexConfig, options);
+
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (MongoException e) {

@@ -6,6 +6,7 @@ import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
+import com.mongodb.client.model.IndexOptions;
 import org.apache.commons.lang3.SystemUtils;
 import org.bson.Document;
 
@@ -111,6 +112,10 @@ public class DATExtractor {
                 }
             }
             ratings.insertMany(ratingList);
+            IndexOptions options = new IndexOptions();
+            options.name("pairIDtime");
+            Document indexConfig = new Document("userID", 1).append("itemID", 1).append("date", -1);
+            ratings.createIndex(indexConfig, options);
         } catch (MongoException e) {
             e.printStackTrace();
         }
@@ -155,6 +160,10 @@ public class DATExtractor {
                 documentList.add(doc);
             }
             collection.insertMany(documentList);
+            IndexOptions options = new IndexOptions();
+            options.name("pairIDtime");
+            Document indexConfig = new Document("userID", 1).append("itemID", 1).append("date", -1);
+            collection.createIndex(indexConfig, options);
         } catch (MongoException e) {
             e.printStackTrace();
         }
